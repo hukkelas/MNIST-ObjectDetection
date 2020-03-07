@@ -79,6 +79,19 @@ def tight_bbox(digit, orig_bbox):
     return [xmin, ymin, xmax, ymax]
 
 
+def dataset_exists(dirpath: pathlib.Path, num_images):
+    if not dirpath.is_dir():
+        return False
+    for image_id in range(num_images):
+        error_msg = f"MNIST dataset already generated in {dirpath}, \n\tbut did not find filepath:"
+        error_msg2 = f"You can delete the directory by running: rm -r {dirpath.parent}"
+        impath = dirpath.joinpath("images", f"{image_id}.png")
+        assert impath.is_file(), f"{error_msg} {impath} \n\t{error_msg2}"
+        label_path = dirpath.joinpath("labels", f"{image_id}.txt")
+        assert label_path.is_file(),  f"{error_msg} {impath} \n\t{error_msg2}"
+    return True
+
+
 def generate_dataset(dirpath: pathlib.Path,
                      num_images: int,
                      max_digit_size: int,
@@ -87,8 +100,7 @@ def generate_dataset(dirpath: pathlib.Path,
                      max_digits_per_image: int,
                      mnist_images: np.ndarray,
                      mnist_labels: np.ndarray):
-    if dirpath.is_dir():
-        print(f"MNIST dataset already generated in {dirpath}. Delete directory to create new.")
+    if dataset_exists(dirpath, num_images):
         return
     max_image_value = 255
     assert mnist_images.dtype == np.uint8
