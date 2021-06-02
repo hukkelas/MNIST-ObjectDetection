@@ -113,7 +113,7 @@ def generate_dataset(dirpath: pathlib.Path,
         labels = []
         bboxes = []
         num_images = np.random.randint(0, max_digits_per_image)
-        for _ in range(num_images):
+        for _ in range(num_images+1):
             while True:
                 width = np.random.randint(min_digit_size, max_digit_size)
                 x0 = np.random.randint(0, imsize-width)
